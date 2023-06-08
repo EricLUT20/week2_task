@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <table id="input-table">
+      <tr>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Admin</th>
+        <th>Image</th>
+      </tr>
+      <tr>
+        <td>Webmaster</td>
+        <td>webmaster@example.com</td>
+        <td>Demoland 123</td>
+        <td>X</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>User123</td>
+        <td>user123@example.com</td>
+        <td>Userplace 321</td>
+        <td>-</td>
+        <td></td>
+      </tr>
+      <tr>
+        <td>AnotherUser222</td>
+        <td>anotheruser222@example.com</td>
+        <td>AnotherPlace 21</td>
+        <td>-</td>
+        <td></td>
+      </tr>
+    </table>
+
+    <form id="user-form">
+      <label for="input-username">Username:</label>
+      <input type="text" id="input-username" required="">
+      <br>
+      <label for="input-email">Email:</label>
+      <input type="email" id="input-email" required="">
+      <br>
+      <label for="input-address">Address:</label>
+      <input type="text" id="input-address" required="">
+      <br>
+      <label for="input-admin">Admin:</label>
+      <input type="checkbox" id="input-admin">
+      <br>
+      <label for="input-image">Image:</label>
+      <input type="file" id="input-image">
+      <br>
+      <button type="button" id="submit-data">Submit</button>
+    </form>
+
+    <button type="button" id="empty-table">Empty Table</button>
+
+    <script>document.getElementById("submit-data").addEventListener("click", function () {
+  var username = document.getElementById("input-username").value;
+  var email = document.getElementById("input-email").value;
+  var address = document.getElementById("input-address").value;
+  var admin = document.getElementById("input-admin").checked;
+  var table = document.getElementById("input-table");
+  var existingRow = findRowByUsername(table, username);
+  if (existingRow) {
+    var emailCell = existingRow.cells[1];
+    var addressCell = existingRow.cells[2];
+    var adminCell = existingRow.cells[3];
+    var imageCell = existingRow.cells[4];
+    emailCell.textContent = email;
+    addressCell.textContent = address;
+    adminCell.textContent = admin ? "X" : "-";
+    displayImage(imageCell);
+  } else {
+    var row = table.insertRow(-1);
+    var usernameCell = row.insertCell(0);
+    var _emailCell = row.insertCell(1);
+    var _addressCell = row.insertCell(2);
+    var _adminCell = row.insertCell(3);
+    var _imageCell = row.insertCell(4);
+    usernameCell.textContent = username;
+    _emailCell.textContent = email;
+    _addressCell.textContent = address;
+    _adminCell.textContent = admin ? "X" : "-";
+    displayImage(_imageCell);
+  }
+});
+document.getElementById("empty-table").addEventListener("click", function () {
+  var table = document.getElementById("input-table");
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
+});
+function displayImage(imageCell) {
+  var fileInput = document.getElementById("input-image");
+  if (fileInput.files.length > 0) {
+    var file = fileInput.files[0];
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      var img = document.createElement("img");
+      img.src = e.target.result;
+      img.width = 64;
+      img.height = 64;
+      imageCell.innerHTML = "";
+      imageCell.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  } else {
+    imageCell.innerHTML = "";
+  }
+}
+function findRowByUsername(table, username) {
+  for (var i = 1; i < table.rows.length; i++) {
+    var row = table.rows[i];
+    var usernameCell = row.cells[0];
+    if (usernameCell.textContent === username) {
+      return row;
+    }
+  }
+  return null;
+}</script>
+  </body>
+</html>
